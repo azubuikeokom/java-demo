@@ -18,9 +18,11 @@ jobs:
 
   build-image:
     docker:
-      - image: ubuntu-2204:2022.04.2
+      - image: cimg/base:2022.06
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14
       - run:
           name: "update and upgrade repo"
           command: |
@@ -41,12 +43,12 @@ jobs:
             sudo apt install -y gzip
       - attach_workspace:
           at: backend
-      - run:
-          name: "install docker"
-          command: sudo apt install docker.io
-      - run:
-          name: "start docker"
-          command:  sudo systemctl start docker            
+      # - run:
+      #     name: "install docker"
+      #     command: sudo apt install docker.io
+      # - run:
+      #     name: "start docker"
+      #     command:  sudo systemctl start docker            
       - run:
           name: Build Docker image with Dockerfile
           command: |
