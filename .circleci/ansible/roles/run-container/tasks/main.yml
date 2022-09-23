@@ -10,25 +10,27 @@
 - name: "start docker engine"
   ansible.builtin.shell: systemctl start docker
 
+- name: "check if aws-cli exist in /bin"
+  ansible.builtin.stat:
+    path: /usr/local/aws-cli
+  register: aws
+
 - name: "download aws-cli zip"
   ansible.builtin.shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  when: not aws.stat.exists
 
 - name: "install unzip"
   ansible.builtin.apt:
     name: unzip
     state: present
-
-- name: "check if aws-cli exist in /bin"
-  ansible.builtin.stat:
-    path: /usr/local/aws-cli
-  register: aws
+  when: not aws.stat.exists
 
 - name: "unzip aws-cli"
   ansible.builtin.shell: unzip awscliv2.zip
   when: not aws.stat.exists
 
 - name: "run aws install script"
-  ansible.builtin.shell: sudo ./aws/install 
+  ansible.builtin.shell: ./aws/install 
   when: not aws.stat.exists
 
 - name: "install aws-cli to /bin and /local directories"
