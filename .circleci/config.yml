@@ -1,0 +1,83 @@
+version: 2.1         
+jobs:
+  compile:
+    docker:
+      - image: circleci/openjdk:11-buster-node-browsers-legacy
+    steps:
+      - checkout
+      - run:
+          name: Compile java application
+          command: |
+            cd backend
+            javac hello.java
+            ls -l
+      - persist_to_workspace:
+          root: backend/
+          paths:
+            - /*
+
+  build-image:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - attach_workspace:
+          at: backend
+      - run:
+          name: Build Docker image with Dockerfile
+          command: |
+            docker build -t hello-java .
+      - run:
+          name: "docker login to ECR"
+          command: aws ecr get-login-password --region us-east-1 | \
+            docker login --username AWS \
+            --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
+      - run:
+          name: Create image Repository on ECR
+          command:  aws ecr create-repository \
+            --repository-name hello-java \
+            --image-scanning-configuration scanOnPush=true \
+            --region us-east-1
+      - run:
+          name: Tag and publish image to ECR
+          command: |
+            docker tag hello-java 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+            docker push 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+
+  configure-server:
+    docker:
+      - image: python:3.7-alpine3.11 
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["f9:ec:09:4e:61:d0:b4:31:c8:bf:5e:39:bd:8b:df:06:3a:c8:7d:f4"]
+      - run:
+          name: Install ansible and its dependencies on container
+          command: |
+            apk add --update ansible
+            apk add --update  tar gzip
+            apk add --update curl
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+            awscli \
+            && rm -rf /var/cache/apk/*
+      - run:
+          name: Configure EC2 server to pull docker image and run container
+          command: |
+            cat .circleci/ansible/inventory.txt
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
+
+workflows:
+  default4:
+    jobs:
+      - compile:
+          filters:
+            branches:
+              only: [master]
+      - build-image:
+          requires: [compile]
+      - configure-server:
+          requires: [build-image]
