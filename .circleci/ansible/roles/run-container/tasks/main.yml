@@ -1,28 +1,4 @@
 ---
-
-# - name: "download aws-cli zip"
-#   ansible.builtin.shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-
-# - name: "install unzip"
-#   ansible.builtin.apt:
-#     name: unzip
-#     state: present
-
-# - name: "check if aws-cli exist in /bin"
-#   ansible.builtin.stat:
-#     path: /usr/local/aws-cli
-#   register: aws
-
-# - name: "unzip aws-cli"
-#   ansible.builtin.shell: unzip awscliv2.zip
-
-# - name: "run aws install script"
-#   ansible.builtin.shell: sudo ./aws/install 
-#   when: not aws.stat.exists
-
-# - name: "install aws-cli to /bin and /local directories"
-#   ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
-#   when: not aws.stat.exists
 - name: "update machine"
   ansible.builtin.apt:
     update_cache: yes
@@ -32,11 +8,35 @@
   ansible.builtin.shell: apt install -y docker.io
 
 - name: "start docker engine"
-  ansible.builtin.shell: systemctl start docker  
+  ansible.builtin.shell: systemctl start docker
+
+- name: "download aws-cli zip"
+  ansible.builtin.shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+- name: "install unzip"
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+
+- name: "check if aws-cli exist in /bin"
+  ansible.builtin.stat:
+    path: /usr/local/aws-cli
+  register: aws
+
+- name: "unzip aws-cli"
+  ansible.builtin.shell: unzip awscliv2.zip
+  when: not aws.stat.exists
+
+- name: "run aws install script"
+  ansible.builtin.shell: sudo ./aws/install 
+  when: not aws.stat.exists
+
+- name: "install aws-cli to /bin and /local directories"
+  ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
+  when: not aws.stat.exists
 
 - name: "login to aws ecr"
-  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS \
-            --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
+  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
 
 - name: "Pull in image from ECR"
   ansible.builtin.shell: docker pull 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
