@@ -52,6 +52,7 @@ jobs:
       - run:
           name: Build Docker image with Dockerfile
           command: |
+            cd backend
             sudo docker build -t hello-java .
       - run:
           name: "docker login to ECR"
