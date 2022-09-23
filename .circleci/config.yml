@@ -36,11 +36,8 @@ jobs:
       - run:
           name: "install docker"
           command: |
-            yum remove docker docker-common docker-selinux docker-engine-selinux docker-engine docker-ce
-            yum install -y yum-utils device-mapper-persistent-data lvm2
-            yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            yum-config-manager --save --setopt=docker-ce-stable.skip_if_unavailable=true
-            yum install docker-ce
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
       - run:
           name: "start docker"
           command:  systemctl start docker            
