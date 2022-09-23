@@ -23,7 +23,9 @@ jobs:
       - checkout
       - run:
           name: "install tar to have workspace capability"
-          command: yum install -y tar 
+          command: |
+            yum install -y tar
+            yum install -y gzip
       - attach_workspace:
           at: backend
       - run:
