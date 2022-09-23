@@ -27,19 +27,7 @@
   ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
-
-- name: "update machine's repo"
-  ansible.builtin.shell: apt-get -y install ca-certificates curl gnupg lsb-release  
-
-- name: "make directories recursively"
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    recurse: yes
-    state: directory
-
-- name: "get gpg key"
-  ansible.builtin.shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg          
-        
+                 
 - name: "install more latest docker"
   ansible.builtin.shell: apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
