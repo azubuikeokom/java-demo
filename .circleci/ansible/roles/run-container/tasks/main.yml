@@ -23,16 +23,15 @@
 # - name: "install aws-cli to /bin and /local directories"
 #   ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
 #   when: not aws.stat.exists
+- name: "install docker on EC2 instance"
+  ansible.builtin.apt:
+    name: docker.io
+    state: present
 
 - name: "login to aws ecr"
   ansible.builtin.shell: aws ecr get-login-password --region us-east-1 | \
             docker login --username AWS \
             --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
-
-- name: "install docker on EC2 instance"
-  ansible.builtin.apt:
-    name: docker.io
-    state: present
 
 - name: "Pull in image from ECR"
   ansible.builtin.shell: docker pull 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
