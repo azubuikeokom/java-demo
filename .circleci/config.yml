@@ -88,8 +88,8 @@ jobs:
           workflow-id: ${CIRCLECI_WORKFLOW_ID:0:7}
 
   configure-server:
-    docker:
-      - image: python:3.7-alpine3.11 
+    machine:
+     image: ubuntu-2204:2022.04.2
     steps:
       - checkout
       - add_ssh_keys:
@@ -97,16 +97,8 @@ jobs:
       - run:
           name: Install ansible and its dependencies on container
           command: |
-            apk add  ansible=2.12.4
-            apk add --update  tar gzip
-            apk add --update curl
-            apk add --no-cache \
-            python3 \
-            py3-pip \
-            && pip3 install --upgrade pip \
-            && pip3 install --no-cache-dir \
-            awscli \
-            && rm -rf /var/cache/apk/*
+            sudo apt update
+            sudo apt install -y ansible
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
