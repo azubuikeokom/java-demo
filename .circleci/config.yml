@@ -110,6 +110,7 @@ jobs:
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
+            export ANSIBLE_HOST_KEY_CHECKING=False
             cat .circleci/ansible/inventory
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory
       - destroy-environment:
