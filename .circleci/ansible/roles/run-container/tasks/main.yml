@@ -23,15 +23,17 @@
 # - name: "install aws-cli to /bin and /local directories"
 #   ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
 #   when: not aws.stat.exists
+- name: "uninstall old docker-ce"
+  ansibl.builtin.shell:  sudo apt-get remove docker docker-engine docker.io containerd runc
 
-- name: Set the stable docker repository
-  apt_repository: 
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} edge"
-    state: present
-    update_cache: yes 
+- name: "install more latest docker"
+  ansible.builtin.shell: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+- name: "start docker engine"
+  ansible.builtin.shell: sudo systemctl start docker  
 
 - name: "login to aws ecr"
-  ansible.builtin.shell: aws ecr get-login-password --region us-east-1 | \
+  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | \
             docker login --username AWS \
             --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
 
