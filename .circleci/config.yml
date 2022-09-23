@@ -1,4 +1,17 @@
-version: 2.1         
+version: 2.1   
+commands:
+  destroy-environment:
+    description: "rollback all deployment if preceeding job fails"
+    parameters:
+      workflow-id:
+        type: string
+    steps:
+      - run:
+          name: roll backend
+          when: on_fail
+          command: |
+            echo Destroying environment <<parameters.workflow-id>>
+            aws ecr delete-repository --repository-name hello-java --force --region $AWS_REGION
 jobs:
   compile:
     docker:
@@ -71,6 +84,8 @@ jobs:
           command: |
              docker tag hello-java 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
              docker push 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+      - destroy-environment:
+          workflow-id: ${CIRCLECI_WORKFLOW_ID:0:7}
 
   configure-server:
     docker:
@@ -97,7 +112,8 @@ jobs:
           command: |
             cat .circleci/ansible/inventory
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
-
+      - destroy-environment:
+          workflow-id: ${CIRCLECI_WORKFLOW_ID:0:7}
 workflows:
   default4:
     jobs:
