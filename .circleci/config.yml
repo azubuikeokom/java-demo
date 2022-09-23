@@ -18,26 +18,32 @@ jobs:
 
   build-image:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/base:2021.04
     steps:
       - checkout
       - run:
           name: "update and upgrade repo"
           command: |
-            yum update
-            yum upgrade
+            apt update
+            apt upgrade
+      - run:
+          name: "install unzip & awscli"
+          command: |
+            apt install -y unzip
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install 
+            ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
       - run:
           name: "install tar and gzip to have workspace capability"
           command: |
-            yum install -y tar
-            yum install -y gzip
+            apt install -y tar
+            apt install -y gzip
       - attach_workspace:
           at: backend
       - run:
           name: "install docker"
-          command: |
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh
+          command: apt install docker.io
       - run:
           name: "start docker"
           command:  systemctl start docker            
