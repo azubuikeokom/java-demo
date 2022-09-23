@@ -65,15 +65,12 @@ jobs:
           command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
       - run:
           name: Create image Repository on ECR
-          command:  sudo aws ecr create-repository \
-            --repository-name hello-java \
-            --image-scanning-configuration scanOnPush=true \
-            --region $AWS_REGION
+          command: aws ecr create-repository --repository-name hello-java --image-scanning-configuration scanOnPush=true --region $AWS_REGION
       - run:
           name: Tag and publish image to ECR
           command: |
-            sudo docker tag hello-java 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
-            sudo docker push 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+             docker tag hello-java 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+             docker push 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
 
   configure-server:
     docker:
