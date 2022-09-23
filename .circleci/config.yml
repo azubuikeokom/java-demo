@@ -22,12 +22,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "install tar to have workspace capability"
+          name: "install tar and gzip to have workspace capability"
           command: |
             yum install -y tar
             yum install -y gzip
       - attach_workspace:
           at: backend
+      - run:
+          name: "install docker"
+          command: yum install -y docker.io
       - run:
           name: Build Docker image with Dockerfile
           command: |
