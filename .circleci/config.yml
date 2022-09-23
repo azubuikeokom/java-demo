@@ -24,10 +24,13 @@ jobs:
       # - setup_remote_docker:
       #     version: 20.10.14
       - run:
-          name: "update and upgrade repo"
+          name: "update repo"
           command: |
-            sudo apt update
-            sudo apt upgrade
+            sudo apt-get update
+            sudo apt-get install ca-certificates curl gnupg lsb-release  
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+            sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg            
       # - run:
       #     name: "install unzip & awscli"
       #     command: |
@@ -44,8 +47,11 @@ jobs:
       - attach_workspace:
           at: backend
       - run:
+          name: "remove old docker engine"
+          command: sudo apt-get remove docker docker-engine docker.io containerd runc
+      - run:
           name: "install docker"
-          command: sudo apt install docker.io
+          command: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
       - run:
           name: "start docker"
           command:  sudo systemctl start docker            
