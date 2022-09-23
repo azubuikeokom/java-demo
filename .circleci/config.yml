@@ -111,11 +111,11 @@ jobs:
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
-            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible --version  
             cat .circleci/ansible/inventory
-            ansible-playbook .circleci/ansible/configure-server.yml  -i .circleci/ansible/inventory
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory
       - destroy-environment:
-          workflow-id: ${CIRCLECI_WORKFLOW_ID:0:7}
+          workflow-id: ${CIRCLE_WORKFLOW_ID:0:7}
 workflows:
   default4:
     jobs:
