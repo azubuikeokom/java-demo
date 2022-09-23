@@ -34,8 +34,6 @@ jobs:
      image: ubuntu-2204:2022.04.2
     steps:
       - checkout
-      # - setup_remote_docker:
-      #     version: 20.10.14
       - run:
           name: "update repo"
           command: |
@@ -44,14 +42,6 @@ jobs:
             sudo mkdir -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
             sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg            
-      # - run:
-      #     name: "install unzip & awscli"
-      #     command: |
-      #       sudo apt install -y unzip
-      #       sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      #       sudo unzip awscliv2.zip
-      #       sudo ./aws/install 
-
       - run:
           name: "install tar and gzip to have workspace capability"
           command: |

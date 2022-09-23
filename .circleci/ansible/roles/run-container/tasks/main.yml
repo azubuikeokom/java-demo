@@ -26,7 +26,7 @@
 - name: "update machine's repo"
   ansible.builtin.shell: |
             apt-get update
-            apt-get install ca-certificates curl gnupg lsb-release  
+            apt-get -y install ca-certificates curl gnupg lsb-release  
             mkdir -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
             gpg --dearmor -o /etc/apt/keyrings/docker.gpg   
@@ -34,7 +34,7 @@
   ansible.builtin.shell:  apt-get remove docker docker-engine docker.io containerd runc
 
 - name: "install more latest docker"
-  ansible.builtin.shell: apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  ansible.builtin.shell: apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 - name: "start docker engine"
   ansible.builtin.shell: systemctl start docker  
