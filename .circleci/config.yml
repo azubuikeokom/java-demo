@@ -111,7 +111,7 @@ jobs:
           name: Configure EC2 server to pull docker image and run container
           command: |
             cat .circleci/ansible/inventory
-            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory
       - destroy-environment:
           workflow-id: ${CIRCLECI_WORKFLOW_ID:0:7}
 workflows:
