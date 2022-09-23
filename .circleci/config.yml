@@ -94,7 +94,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: 
-            - "f9:ec:09:4e:61:d0:b4:31:c8:bf:5e:39:bd:8b:df:06:3a:c8:7d:f4"
+            - "a2:e3:d9:22:a9:9d:ea:bf:af:ab:8d:9d:5e:66:bf:27"
       - run:
           name: Install ansible and its dependencies on container
           command: |
