@@ -24,7 +24,7 @@
 #   ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
 #   when: not aws.stat.exists
 - name: "uninstall old docker-ce"
-  ansibl.builtin.shell:  sudo apt-get remove docker docker-engine docker.io containerd runc
+  ansible.builtin.shell:  sudo apt-get remove docker docker-engine docker.io containerd runc
 
 - name: "install more latest docker"
   ansible.builtin.shell: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
