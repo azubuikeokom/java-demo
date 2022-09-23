@@ -98,13 +98,15 @@ jobs:
       - run:
           name: Install ansible and its dependencies on container
           command: |
-              sudo apt update
-              sudo apt install software-properties-common
-              sudo add-apt-repository --yes --update ppa:ansible/ansible
-              sudo apt install ansible         
+            apk add --update ansible
+            apk add --update  tar gzip
+            apk add --update curl
+            apk add --no-cache awscli \
+            && rm -rf /var/cache/apk/*
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
+
             ansible --version  
             cat .circleci/ansible/inventory
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory
