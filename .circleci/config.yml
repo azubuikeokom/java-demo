@@ -93,12 +93,11 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: 
-            - "a2:e3:d9:22:a9:9d:ea:bf:af:ab:8d:9d:5e:66:bf:27"
+          fingerprints: ["a2:e3:d9:22:a9:9d:ea:bf:af:ab:8d:9d:5e:66:bf:27"]
       - run:
           name: Install ansible and its dependencies on container
           command: |
-            apk add --update ansible
+            apk add  ansible
             apk add --update  tar gzip
             apk add --update curl
             apk add --no-cache \
@@ -111,7 +110,6 @@ jobs:
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
-
             ansible --version  
             cat .circleci/ansible/inventory
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory
