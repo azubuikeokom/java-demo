@@ -101,7 +101,12 @@ jobs:
             apk add --update ansible
             apk add --update  tar gzip
             apk add --update curl
-            apk add --no-cache awscli \
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+            awscli \
             && rm -rf /var/cache/apk/*
       - run:
           name: Configure EC2 server to pull docker image and run container
