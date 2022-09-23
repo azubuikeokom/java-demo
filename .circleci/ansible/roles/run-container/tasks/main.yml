@@ -29,7 +29,7 @@
     cache_valid_time: 3600
                  
 - name: "install more latest docker"
-  ansible.builtin.shell: apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  ansible.builtin.shell: apt install -y docker.io
 
 - name: "start docker engine"
   ansible.builtin.shell: systemctl start docker  
