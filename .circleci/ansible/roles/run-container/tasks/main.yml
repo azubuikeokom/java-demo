@@ -23,14 +23,23 @@
 # - name: "install aws-cli to /bin and /local directories"
 #   ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
 #   when: not aws.stat.exists
+- name: "update machine"
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: "update machine's repo"
-  ansible.builtin.shell: |
-            apt-get update
-            apt-get -y install ca-certificates curl gnupg lsb-release  
-            mkdir -p /etc/apt/keyrings
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-            gpg --dearmor -o /etc/apt/keyrings/docker.gpg   
-            
+  ansible.builtin.shell: apt-get -y install ca-certificates curl gnupg lsb-release  
+
+- name: "make directories recursively"
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    recurse: yes
+    state: directory
+
+- name: "get gpg key"
+  ansible.builtin.shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg          
+        
 - name: "install more latest docker"
   ansible.builtin.shell: apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
@@ -38,8 +47,7 @@
   ansible.builtin.shell: systemctl start docker  
 
 - name: "login to aws ecr"
-  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | \
-            docker login --username AWS \
+  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS \
             --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
 
 - name: "Pull in image from ECR"
