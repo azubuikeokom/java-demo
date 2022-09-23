@@ -97,7 +97,7 @@ jobs:
       - run:
           name: Install ansible and its dependencies on container
           command: |
-            apk add  ansible
+            apk add  ansible=2.12.4
             apk add --update  tar gzip
             apk add --update curl
             apk add --no-cache \
