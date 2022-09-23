@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run:
           name: "install tar to have workspace capability"
-          command: apt install -y tar 
+          command: yum install -y tar 
       - attach_workspace:
           at: backend
       - run:
