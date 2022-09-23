@@ -60,6 +60,8 @@ jobs:
           command: |
             cd backend
             sudo docker build -t hello-java .
+      - run: docker run hello-java
+      - run: echo $AWS_ACCESS_KEY_ID
       - run:
           name: "docker login to ECR"
           command: sudo aws ecr get-login-password --region us-east-1 | \
