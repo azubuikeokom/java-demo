@@ -1,6 +1,6 @@
 [frontendserver]
-54.210.0.180 ansible_ssh_pass=vagrant ansible_ssh_user=vagrant
+54.210.0.180 
 [backendserver]
-23.20.45.57 ansible_ssh_pass=vagrant ansible_ssh_user=vagrant
+23.20.45.57 
 [dbserver]
-44.209.200.214 ansible_ssh_pass=vagrant ansible_ssh_user=vagrant
+44.209.200.214 
