@@ -95,7 +95,7 @@ jobs:
       - run:
           name: Configure EC2 server to pull docker image and run container
           command: |
-            cat .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
 
 workflows:
