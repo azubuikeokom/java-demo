@@ -14,5 +14,8 @@
     AWS_REGION: "{{lookup('ansible.builtin.env','AWS_REGION')}}"
 
   roles:
-    - run-container
+    - role: run-container
+      vars:
+        ACCOUNT_ID: 072056452537
+        IMAGE_TAG: hello-java:v1.0.0
   

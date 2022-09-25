@@ -1,48 +1,19 @@
 ---
-- name: "update machine"
-  ansible.builtin.apt:
-    update_cache: yes
-    cache_valid_time: 3600
                  
-- name: "install more latest docker"
-  ansible.builtin.shell: apt install -y docker.io
+- name: "install latest docker"
+  ansible.builtin.yum:
+    name: docker
+    state: latest
 
 - name: "start docker engine"
   ansible.builtin.shell: systemctl start docker
 
-- name: "check if aws-cli exist in /bin"
-  ansible.builtin.stat:
-    path: /usr/local/aws-cli
-  register: aws
-
-- name: "download aws-cli zip"
-  ansible.builtin.shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  when: not aws.stat.exists
-
-- name: "install unzip"
-  ansible.builtin.apt:
-    name: unzip
-    state: present
-  when: not aws.stat.exists
-
-- name: "unzip aws-cli"
-  ansible.builtin.shell: unzip awscliv2.zip
-  when: not aws.stat.exists
-
-- name: "run aws install script"
-  ansible.builtin.shell: ./aws/install 
-  when: not aws.stat.exists
-
-- name: "install aws-cli to /bin and /local directories"
-  ansible.builtin.shell: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin 
-  when: not aws.stat.exists
-
 - name: "login to aws ecr"
-  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 072056452537.dkr.ecr.us-east-1.amazonaws.com
+  ansible.builtin.shell: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
 - name: "Pull in image from ECR"
-  ansible.builtin.shell: docker pull 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+  ansible.builtin.shell: docker pull "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_TAG}"
 
 - name: "run docker container"
-  ansible.builtin.shell: docker run 072056452537.dkr.ecr.us-east-1.amazonaws.com/hello-java:v1.0.0
+  ansible.builtin.shell: docker run "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_TAG}""
 ...
