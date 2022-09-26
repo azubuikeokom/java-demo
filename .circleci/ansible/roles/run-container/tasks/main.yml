@@ -15,5 +15,5 @@
   ansible.builtin.shell: docker pull "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_TAG}"
 
 - name: "run docker container"
-  ansible.builtin.shell: docker run "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_TAG}""
+  ansible.builtin.shell: docker run -p 8080:8080 "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_TAG}""
 ...
